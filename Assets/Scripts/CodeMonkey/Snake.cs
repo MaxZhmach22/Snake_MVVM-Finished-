@@ -1,3 +1,5 @@
+using CodeMonkey;
+using CodeMonkey.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +11,8 @@ public class Snake : MonoBehaviour
     private float gridMoveTimerMax = 1f;
     private Vector2Int gridMoveDirection = new Vector2Int(1, 0);
     private LevelGrid _levelGrid;
+    private int snakeBodySize = 0;
+    private List<Vector2Int> snakeMovePositonList = new List<Vector2Int>();
 
     public void Setup(LevelGrid levelGrid)
     {
@@ -68,12 +72,34 @@ public class Snake : MonoBehaviour
         gridMoveTime += Time.deltaTime;
         if (gridMoveTime >= gridMoveTimerMax)
         {
-            gridPosition += gridMoveDirection;
             gridMoveTime -= gridMoveTimerMax;
+
+            snakeMovePositonList.Insert(0, gridPosition);
+
+            gridPosition += gridMoveDirection;
+
+            bool snakeAteFood = _levelGrid.TrySnakeEatFood(gridPosition);
+
+            if (snakeAteFood)
+            {
+                snakeBodySize++;
+            }
+
+            if (snakeMovePositonList.Count >= snakeBodySize + 1)
+            {
+                snakeMovePositonList.RemoveAt(snakeMovePositonList.Count - 1);
+            }
+
+            for (int i = 0; i < snakeMovePositonList.Count; i++)
+            {
+                Vector2Int snakeMovePositon = snakeMovePositonList[i];
+                World_Sprite worldSprite = World_Sprite.Create(new Vector3(snakeMovePositon.x, snakeMovePositon.y), Vector3.one * 0.5f, Color.white);
+                FunctionTimer.Create(worldSprite.DestroySelf, gridMoveTimerMax);
+            }
         }
         transform.position = new Vector3(gridPosition.x, gridPosition.y);
         transform.eulerAngles = new Vector3(0, 0, GetAngleFromDirection(gridMoveDirection) - 90);
-        _levelGrid.SnakeMoved(gridPosition);
+       
     }
 
     private float GetAngleFromDirection(Vector2Int direction)
@@ -86,5 +112,11 @@ public class Snake : MonoBehaviour
     public Vector2Int GetGridPosition()
     {
         return gridPosition;
+    }
+    public List<Vector2Int> GetFullSnakeGridPosition()
+    {
+        List<Vector2Int> gridPositionList = new List<Vector2Int>();
+        gridPositionList.AddRange(snakeMovePositonList);
+        return gridPositionList;
     }
 }
