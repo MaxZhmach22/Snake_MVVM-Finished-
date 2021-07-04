@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-sealed class HpModelView :IHpViewModel
+sealed class HpModelView : IHpViewModel
 {
     private bool _isDead;
     public event Action<float> OnHpChange;

@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+
+namespace MVVM
+{
+    public sealed class LevelSetup
+    {
+        private Vector2Int foodGridPosition;
+        private int _weight;
+        private int _height;
+        private Sprite _backgroundImage;
+        public LevelSetup(int weight, int height)
+        {
+            _weight = weight;
+            _height = height;
+            _backgroundImage = Resources.Load<Sprite>("Background");
+            SetupBackgroundImage(_backgroundImage);
+        }
+
+        private void SetupBackgroundImage(Sprite backGroundSprite)
+        {
+            var gameObject = new GameObject("Background", typeof(SpriteRenderer));
+            var background = gameObject.GetComponent<SpriteRenderer>();
+            background.sprite = backGroundSprite;
+            background.sortingLayerName = "Background";
+            gameObject.transform.localScale = new Vector3(_height, _weight);
+            gameObject.transform.position = new Vector3(_height / 2, _weight / 2);
+
+        }
+    }
+}
