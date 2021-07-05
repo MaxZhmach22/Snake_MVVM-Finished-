@@ -10,6 +10,7 @@ public  static class Loader
     {
         GameScene,
         Loader,
+        MainMenu,
     }
 
     private static Action loaderCallbakAction;
