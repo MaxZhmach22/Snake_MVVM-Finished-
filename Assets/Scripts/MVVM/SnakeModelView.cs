@@ -11,23 +11,30 @@ namespace MVVM
     {
         private bool _isDead;
 
-
         public ISnakeModel SnakeModel { get; }
         public bool IsDead => _isDead;
 
         public event Action<int> OnEatApple;
+        public event Action<Vector2Int> OnKeyInput;
 
         private Transform _snakeTransform;
         
         public SnakeModelView(ISnakeModel snakeModel)
         {
             SnakeModel = snakeModel;
-            _snakeTransform = CreateSnake(SnakeModel);
+            //_snakeTransform = CreateSnake(SnakeModel);
         }
+
+       
 
         public void EatApple()
         {
             OnEatApple?.Invoke(100);
+        }
+
+        public void Move(Vector2Int direction)
+        {
+            OnKeyInput?.Invoke(direction);
         }
 
         private Transform CreateSnake(ISnakeModel snakeModel)
