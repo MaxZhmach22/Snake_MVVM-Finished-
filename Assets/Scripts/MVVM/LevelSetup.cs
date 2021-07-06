@@ -13,6 +13,8 @@ namespace MVVM
         private int _weight;
         private int _height;
         private Sprite _backgroundImage;
+        public int Weight => _weight; 
+        public int Height => _height; 
         public LevelSetup(int weight, int height)
         {
             _weight = weight;
@@ -20,6 +22,7 @@ namespace MVVM
             _backgroundImage = Resources.Load<Sprite>("Background");
             SetupBackgroundImage(_backgroundImage);
         }
+
 
         private void SetupBackgroundImage(Sprite backGroundSprite)
         {
