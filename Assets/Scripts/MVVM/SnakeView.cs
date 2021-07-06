@@ -13,6 +13,7 @@ namespace MVVM
         [SerializeField] private Sprite _snakeHead;
         [SerializeField] private Sprite _snakeBody;
 
+        private LevelSetup _levelSetup;
         private ISnakeModelView _snakeModelView;
         private Transform _snake;
         private float gridMoveTime;
@@ -20,9 +21,10 @@ namespace MVVM
         private Vector2Int gridPosition = new Vector2Int(10, 10);
         private Vector2Int _direction;
 
-        public void Initialize(ISnakeModelView snakeModelView)
+        public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup)
         {
             _snakeModelView = snakeModelView;
+            _levelSetup = levelSetup;
             _snakeModelView.OnEatApple += OnEatApple;
             _snakeModelView.OnKeyInput += OnMove;
             _snake = SnakeFactory.CreateGameObject(_snakeHead);
@@ -36,8 +38,11 @@ namespace MVVM
             {
                 gridMoveTime -= gridMoveTimerMax;
                 gridPosition += _direction;
+                gridPosition = ValidateGridPosition(gridPosition);
                 _snake.position = new Vector3(gridPosition.x, gridPosition.y);
                 _snake.eulerAngles = new Vector3(0, 0, GetAngleFromDirection(_direction) - 90);
+                _snakeModelView.GetSnakePosition(gridPosition);
+                
             }
         }
 
@@ -60,6 +65,30 @@ namespace MVVM
             return n;
         }
 
+        public Vector2Int GetSnakePosition()
+        {
+            return gridPosition;
+        }
+        public Vector2Int ValidateGridPosition(Vector2Int gridPosition)
+        {
+            if (gridPosition.x < 0)
+            {
+                gridPosition.x = _levelSetup.Weight - 1;
+            }
+            if (gridPosition.x > _levelSetup.Weight - 1)
+            {
+                gridPosition.x = 0;
+            }
+            if (gridPosition.y < 0)
+            {
+                gridPosition.y = _levelSetup.Height - 1;
+            }
+            if (gridPosition.y > _levelSetup.Height - 1)
+            {
+                gridPosition.y = 0;
+            }
+            return gridPosition;
+        }
 
 
     }

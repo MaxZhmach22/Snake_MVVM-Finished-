@@ -13,26 +13,37 @@ namespace MVVM
         private ISnakeModelView _snakeModelView;
         private LevelSetup _levelSetup;
         private Vector2Int _foodGridPosition;
+        private Transform _appleTransform;
         
         public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup)
         {
             _snakeModelView = snakeModelView;
             _levelSetup = levelSetup;
-            SpawnFood(_snakeModelView, _levelSetup);
+            _appleTransform = SnakeFactory.CreateGameObject(_apple);
+            SpawnFood();
             _snakeModelView.OnEatApple += OnEatApple;
+            
         }
 
-        public void SpawnFood(ISnakeModelView snakeModelView, LevelSetup levelSetup)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            //do
-            //{
-            //    _foodGridPosition = new Vector2Int(UnityEngine.Random.Range(0, levelSetup.Weight), UnityEngine.Random.Range(0,levelSetup.Height));
-            //}
+            SpawnFood();
+        }
+        public void SpawnFood()
+        {
+            do
+            {
+                _foodGridPosition = new Vector2Int(UnityEngine.Random.Range(0, _levelSetup.Weight), UnityEngine.Random.Range(0, _levelSetup.Height));
+            } while (_snakeModelView.SnakePosition == _foodGridPosition);
+
+            _appleTransform.position = new Vector3(_foodGridPosition.x, _foodGridPosition.y);
+
         }
 
         public void OnEatApple(int i)
         {
-            SpawnFood(_snakeModelView, _levelSetup);
+            SpawnFood();
         }
+
     }
 }

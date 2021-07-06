@@ -10,22 +10,20 @@ namespace MVVM
     class SnakeModelView : ISnakeModelView
     {
         private bool _isDead;
-
-        public ISnakeModel SnakeModel { get; }
-        public bool IsDead => _isDead;
-
+        private Transform _snakeTransform;
+        private Vector2Int _snakePosition;
         public event Action<int> OnEatApple;
         public event Action<Vector2Int> OnKeyInput;
 
-        private Transform _snakeTransform;
-        
+        public ISnakeModel SnakeModel { get; }
+        public bool IsDead => _isDead;
+        public Vector2Int SnakePosition => _snakePosition;
+
         public SnakeModelView(ISnakeModel snakeModel)
         {
             SnakeModel = snakeModel;
             //_snakeTransform = CreateSnake(SnakeModel);
         }
-
-       
 
         public void EatApple()
         {
@@ -44,6 +42,11 @@ namespace MVVM
             snakeHeadSprite.sprite = snakeModel.SnakeHead;
             gameObject.transform.position = new Vector3(10, 10);
             return gameObject.transform;
+        }
+
+        public void GetSnakePosition(Vector2Int position)
+        {
+            _snakePosition = position;
         }
 
         public Transform GetSnakeTranform()

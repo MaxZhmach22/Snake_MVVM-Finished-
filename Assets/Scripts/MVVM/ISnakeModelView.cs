@@ -11,9 +11,18 @@ namespace MVVM
     {
         ISnakeModel SnakeModel { get; }
         bool IsDead { get; }
+
+        Vector2Int SnakePosition { get; } 
         void EatApple();
+
+        
+        void GetSnakePosition(Vector2Int position);
+
+        void Move(Vector2Int gridMoveDirectionVector);
+
 
         event Action<int> OnEatApple;
         event Action<Vector2Int> OnKeyInput;
+
     }
 }
