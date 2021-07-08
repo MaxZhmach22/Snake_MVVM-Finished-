@@ -10,19 +10,23 @@ namespace MVVM
     public interface ISnakeModelView
     {
         ISnakeModel SnakeModel { get; }
-        bool IsDead { get; }
+        bool IsDead { get; set; }
 
-        Vector2Int SnakePosition { get; } 
+        Vector2Int SnakeHeadPosition { get; }
+
+        List<Vector2Int> FullSnakeGridPosition { get; }
         void EatApple();
 
         
         void GetSnakePosition(Vector2Int position);
+        void GetFullSnakeGridPosition(List<Vector2Int> snakePositionList);
 
-        void Move(Vector2Int gridMoveDirectionVector);
+
+        void Move(Vector2Int position, Direction direction);
 
 
         event Action<int> OnEatApple;
-        event Action<Vector2Int> OnKeyInput;
+        event Action<Vector2Int, Direction> OnKeyInput;
 
     }
 }

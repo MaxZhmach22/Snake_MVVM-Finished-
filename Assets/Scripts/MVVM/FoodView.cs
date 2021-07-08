@@ -25,16 +25,19 @@ namespace MVVM
             
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void Update()
         {
-            SpawnFood();
+            if(_snakeModelView.SnakeHeadPosition == _foodGridPosition)
+            {
+                _snakeModelView.EatApple();
+            }
         }
         public void SpawnFood()
         {
             do
             {
                 _foodGridPosition = new Vector2Int(UnityEngine.Random.Range(0, _levelSetup.Weight), UnityEngine.Random.Range(0, _levelSetup.Height));
-            } while (_snakeModelView.SnakePosition == _foodGridPosition);
+            } while (_snakeModelView.FullSnakeGridPosition.IndexOf(_foodGridPosition) != -1);
 
             _appleTransform.position = new Vector3(_foodGridPosition.x, _foodGridPosition.y);
 

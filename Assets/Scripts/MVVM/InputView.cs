@@ -9,13 +9,7 @@ namespace MVVM
 {
     public sealed class InputView : MonoBehaviour
     {
-        private enum Direction
-        {
-            Left,
-            Right,
-            Up,
-            Down
-        }
+        
 
         private ISnakeModelView _snakeModelView;
         private LevelSetup _levelSetup;
@@ -83,7 +77,7 @@ namespace MVVM
                 case Direction.Down: gridMoveDirectionVector = new Vector2Int(0, -1); break;
             }
             
-            _snakeModelView.Move(gridMoveDirectionVector);
+            _snakeModelView.Move(gridMoveDirectionVector, gridMoveDirection);
         }
        
     }

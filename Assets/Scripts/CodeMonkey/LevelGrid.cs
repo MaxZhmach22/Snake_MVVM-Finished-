@@ -10,6 +10,7 @@ public class LevelGrid {
     private GameObject foodGameObject;
     private Snake _snake;
 
+
     public void Setup (Snake snake)
     {
         _snake = snake;

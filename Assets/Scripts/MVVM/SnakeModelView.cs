@@ -12,12 +12,17 @@ namespace MVVM
         private bool _isDead;
         private Transform _snakeTransform;
         private Vector2Int _snakePosition;
+        private List<Vector2Int> _fullSnakeGridPosition;
         public event Action<int> OnEatApple;
-        public event Action<Vector2Int> OnKeyInput;
+        public event Action<Vector2Int, Direction> OnKeyInput;
 
         public ISnakeModel SnakeModel { get; }
-        public bool IsDead => _isDead;
-        public Vector2Int SnakePosition => _snakePosition;
+        public bool IsDead { get => _isDead; set => _isDead = value; }
+        public Vector2Int SnakeHeadPosition => _snakePosition;
+
+        public List<Vector2Int> FullSnakeGridPosition => _fullSnakeGridPosition;
+
+       
 
         public SnakeModelView(ISnakeModel snakeModel)
         {
@@ -30,18 +35,9 @@ namespace MVVM
             OnEatApple?.Invoke(100);
         }
 
-        public void Move(Vector2Int direction)
+        public void Move(Vector2Int position, Direction direction)
         {
-            OnKeyInput?.Invoke(direction);
-        }
-
-        private Transform CreateSnake(ISnakeModel snakeModel)
-        {
-            var gameObject = new GameObject("Snake", typeof(SpriteRenderer));
-            var snakeHeadSprite = gameObject.GetComponent<SpriteRenderer>();
-            snakeHeadSprite.sprite = snakeModel.SnakeHead;
-            gameObject.transform.position = new Vector3(10, 10);
-            return gameObject.transform;
+            OnKeyInput?.Invoke(position,direction);
         }
 
         public void GetSnakePosition(Vector2Int position)
@@ -54,6 +50,10 @@ namespace MVVM
             return _snakeTransform;
         }
 
-
+        public void GetFullSnakeGridPosition(List<Vector2Int> snakePositionList)
+        {
+            _fullSnakeGridPosition = new List<Vector2Int>() { _snakePosition };
+            _fullSnakeGridPosition.AddRange(snakePositionList);
+        }
     }
 }

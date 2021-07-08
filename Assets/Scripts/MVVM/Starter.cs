@@ -21,8 +21,8 @@ namespace MVVM
             _snakeModel = new SnakeModel(1f);
             _snakeModelView = new SnakeModelView(_snakeModel);
             _snakeView.Initialize(_snakeModelView, level);
-            _foodView.Initialize(_snakeModelView, level);
             _inputView.Initialize(_snakeModelView, level);
+            _foodView.Initialize(_snakeModelView, level);
         }
 
     }
