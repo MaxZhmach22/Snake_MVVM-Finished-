@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MVVM
 {
@@ -15,12 +17,35 @@ namespace MVVM
         private LevelSetup _levelSetup;
         private Direction gridMoveDirection = Direction.Right;
         private Vector2Int gridMoveDirectionVector = new Vector2Int(+1, 0);
+        private Button _upBtn;
+        private Button _downBtn;
+        private Button _rightBtn;
+        private Button _leftBtn;
+        private TextMeshProUGUI textMesh;
+        private int score = 0;
+        
 
+        private void Awake()
+        {
+            _upBtn = GameObject.Find("UpBtn").GetComponent<Button>();
+            _downBtn = GameObject.Find("DownBtn").GetComponent<Button>();
+            _rightBtn = GameObject.Find("RightBtn").GetComponent<Button>();
+            _leftBtn = GameObject.Find("LeftBtn").GetComponent<Button>();
+            _upBtn.onClick.AddListener(() => UpDirection(Direction.Up));
+            _downBtn.onClick.AddListener(() => DownDirection(Direction.Down));
+            _rightBtn.onClick.AddListener(() => RightDirection(Direction.Right));
+            _leftBtn.onClick.AddListener(() => LeftDirection(Direction.Left));
+            textMesh = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+            textMesh.text = "Score: 0";
+
+        }
 
         public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup)
         {
             _snakeModelView = snakeModelView;
             _levelSetup = levelSetup;
+            _snakeModelView.OnEatApple += ScoreText;
+
         }
 
         private void Update()
@@ -29,40 +54,39 @@ namespace MVVM
             {
                 _snakeModelView.EatApple();
             }
-            HandInput();
             HandleGridMovemet();
         }
 
-        private void HandInput()
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                if (gridMoveDirection != Direction.Down)
-                {
-                    gridMoveDirection = Direction.Up;
-                }
 
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+        private void UpDirection(Direction direction)
+        {
+            if (gridMoveDirection != Direction.Down)
             {
-                if (gridMoveDirection != Direction.Up)
-                {
-                    gridMoveDirection = Direction.Down;
-                }
+                gridMoveDirection = direction;
             }
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+        }
+
+        private void DownDirection(Direction direction)
+        {
+            if (gridMoveDirection != Direction.Up)
             {
-                if (gridMoveDirection != Direction.Left)
-                {
-                    gridMoveDirection = Direction.Right;
-                }
+                gridMoveDirection = direction;
             }
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+        }
+
+        private void RightDirection(Direction direction)
+        {
+            if (gridMoveDirection != Direction.Left)
             {
-                if (gridMoveDirection != Direction.Right)
-                {
-                    gridMoveDirection = Direction.Left;
-                }
+                gridMoveDirection = direction;
+            }
+        }
+
+        private void LeftDirection(Direction direction)
+        {
+            if (gridMoveDirection != Direction.Right)
+            {
+                gridMoveDirection = direction;
             }
         }
 
@@ -78,6 +102,12 @@ namespace MVVM
             }
             
             _snakeModelView.Move(gridMoveDirectionVector, gridMoveDirection);
+        }
+
+        private void ScoreText(int appleScore)
+        {
+            score += appleScore;
+            textMesh.text ="Score: " + score.ToString();
         }
        
     }
