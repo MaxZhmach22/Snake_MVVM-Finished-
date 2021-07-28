@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using CodeMonkey.Utils;
-using CodeMonkey;
 
 namespace MVVM
 {
@@ -95,7 +93,6 @@ namespace MVVM
         {
             _snakeBodySize++;
             gridMoveTimerMax -= 0.005f;
-            Debug.Log(gridMoveTimerMax);
             CreateSnakeBodyPart();
         }
 
