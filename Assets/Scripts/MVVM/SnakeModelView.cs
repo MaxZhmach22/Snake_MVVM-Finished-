@@ -27,7 +27,7 @@ namespace MVVM
         public SnakeModelView(ISnakeModel snakeModel)
         {
             SnakeModel = snakeModel;
-            //_snakeTransform = CreateSnake(SnakeModel);
+           
         }
 
         public void EatApple()

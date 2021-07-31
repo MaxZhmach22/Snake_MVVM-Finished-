@@ -12,7 +12,6 @@ namespace MVVM
     public sealed class InputView : MonoBehaviour
     {
         
-
         private ISnakeModelView _snakeModelView;
         private LevelSetup _levelSetup;
         private Direction gridMoveDirection = Direction.Right;
@@ -21,11 +20,29 @@ namespace MVVM
         private Button _downBtn;
         private Button _rightBtn;
         private Button _leftBtn;
-        private TextMeshProUGUI textMesh;
+        private TextMeshProUGUI _scoreText;
+        private TextMeshProUGUI _bestScoreText;
         private int score = 0;
         
 
         private void Awake()
+        {
+            InputButtonsInit();
+            _scoreText = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+            _scoreText.text = "Score: 0";
+            _bestScoreText = GameObject.Find("BestScoreText").GetComponent<TextMeshProUGUI>();
+
+        }
+
+
+        public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup)
+        {
+            _snakeModelView = snakeModelView;
+            _levelSetup = levelSetup;
+            _snakeModelView.OnEatApple += ScoreText;
+
+        }
+        private void InputButtonsInit()
         {
             _upBtn = GameObject.Find("UpBtn").GetComponent<Button>();
             _downBtn = GameObject.Find("DownBtn").GetComponent<Button>();
@@ -35,25 +52,10 @@ namespace MVVM
             _downBtn.onClick.AddListener(() => DownDirection(Direction.Down));
             _rightBtn.onClick.AddListener(() => RightDirection(Direction.Right));
             _leftBtn.onClick.AddListener(() => LeftDirection(Direction.Left));
-            textMesh = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
-            textMesh.text = "Score: 0";
-
-        }
-
-        public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup)
-        {
-            _snakeModelView = snakeModelView;
-            _levelSetup = levelSetup;
-            _snakeModelView.OnEatApple += ScoreText;
-
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                _snakeModelView.EatApple();
-            }
             HandleGridMovemet();
         }
 
@@ -107,8 +109,9 @@ namespace MVVM
         private void ScoreText(int appleScore)
         {
             score += appleScore;
-            textMesh.text ="Score: " + score.ToString();
+            _scoreText.text ="Score: " + score.ToString();
         }
+
        
     }
 }
