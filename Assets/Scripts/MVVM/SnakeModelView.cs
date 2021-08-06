@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace MVVM
 {
-    class SnakeModelView : ISnakeModelView
+    public class SnakeModelView : ISnakeModelView
     {
         private bool _isDead;
         private Transform _snakeTransform;

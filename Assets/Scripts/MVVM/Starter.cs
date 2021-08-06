@@ -17,14 +17,16 @@ namespace MVVM
         private SnakeModelView _snakeModelView;
         private UIModel _uiModel;
         private UIModelView _uiModelView;
+        private ScoreData _scoreData;
 
         void Start()
         {
+            _scoreData = Resources.Load<ScoreData>("ScoreData");
             LevelSetup level = new LevelSetup(21, 21);
             _snakeModel = new SnakeModel(1f);
             _snakeModelView = new SnakeModelView(_snakeModel);
             _uiModel = new UIModel();
-            _uiModelView = new UIModelView(_uiModel);
+            _uiModelView = new UIModelView(_uiModel, _scoreData, _snakeModelView);
             _uIView.Initialize(_uiModelView);
             _snakeView.Initialize(_snakeModelView, level);
             _inputView.Initialize(_snakeModelView, level);

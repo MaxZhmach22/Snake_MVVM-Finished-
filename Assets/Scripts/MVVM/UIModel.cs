@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace MVVM
 { 
@@ -69,6 +70,11 @@ namespace MVVM
                 Time.timeScale = 1;
                 Debug.Log("Resume");
             }
+        }
+
+        public void MainMenuLoad()
+        {
+            SceneManager.LoadScene("MainMenu");
         }
 
     }

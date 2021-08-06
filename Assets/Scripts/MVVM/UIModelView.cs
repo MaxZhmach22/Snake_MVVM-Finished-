@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 namespace MVVM
 {
@@ -13,34 +15,67 @@ namespace MVVM
         private Button _menuBtn;
         private Button _resumeBtn;
         private Button _mainMenuBtn;
-
         private Transform _pauseMenu;
+        private TextMeshProUGUI _scoreText;
+        private TextMeshProUGUI _bestScoreText;
 
         private UIModel _uiModel;
-
+        private ScoreData _scoreData;
+        private SnakeModelView _snakeModelView;
         public Button MenuBtn { get => _menuBtn; }
+        public Button ResumeBtn { get => _resumeBtn; }
+        public Button MainMenuBtn { get => _mainMenuBtn; }
 
         public event Action<bool> OnPauseGame;
 
-
-        private bool isActive = false;
-        public UIModelView(UIModel uiModel)
+        public UIModelView(UIModel uiModel, ScoreData scoreData, SnakeModelView snakeModelView)
         {
             _uiModel = uiModel;
             _menuBtn = _uiModel.MenuBtn;
             _resumeBtn = _uiModel.ResumeBtn;
             _mainMenuBtn = _uiModel.MainMenuBtn;
             _pauseMenu = _uiModel.PauseMenu;
-            _pauseMenu.gameObject.SetActive(false);
+            _scoreData = scoreData;
+            _scoreText = _uiModel.ScoreText;
+            _bestScoreText = uiModel.BestScoreText;
+            _snakeModelView = snakeModelView;
+            _snakeModelView.OnEatApple += SetCurrentScore;
+            SetActivePanel();
+        }
 
+        public void SetCurrentScore(int currentScore)
+        {
+            _scoreData.CurrentScore += currentScore;
+            _scoreText.text = _scoreData.CurrentScore.ToString();
+            _scoreData.AddToScoreList();
+            ScoreListToText();
+        }
+
+        public void ScoreListToText()
+        {
+            for (int i = 0; i < _scoreData.ScoreList.Count; i++)
+            {
+                _bestScoreText.text = i + 1 + " " + _scoreData.ScoreList[i].ToString();
+            }
+            
         }
 
         public void IsPauseGame()
         {
-            _pauseMenu.gameObject.SetActive(true);
-            _uiModel.PauseGame();
-            OnPauseGame?.Invoke(_uiModel.IsPaused);
 
+            _uiModel.PauseGame();
+            SetActivePanel();
+            OnPauseGame?.Invoke(_uiModel.IsPaused);
+        }
+
+        public void SetActivePanel()
+        {
+            _pauseMenu.gameObject.SetActive(_uiModel.IsPaused);
+        }
+
+        public void LoadScene()
+        {
+            _uiModel.MainMenuLoad();
         }
 
     }

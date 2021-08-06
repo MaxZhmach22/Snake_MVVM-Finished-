@@ -20,18 +20,12 @@ namespace MVVM
         private Button _downBtn;
         private Button _rightBtn;
         private Button _leftBtn;
-        private TextMeshProUGUI _scoreText;
-        private TextMeshProUGUI _bestScoreText;
         private int score = 0;
         
 
         private void Awake()
         {
             InputButtonsInit();
-            _scoreText = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
-            _scoreText.text = "Score: 0";
-            _bestScoreText = GameObject.Find("BestScoreText").GetComponent<TextMeshProUGUI>();
-
         }
 
 
@@ -39,7 +33,6 @@ namespace MVVM
         {
             _snakeModelView = snakeModelView;
             _levelSetup = levelSetup;
-            _snakeModelView.OnEatApple += ScoreText;
 
         }
         private void InputButtonsInit()
@@ -105,13 +98,5 @@ namespace MVVM
             
             _snakeModelView.Move(gridMoveDirectionVector, gridMoveDirection);
         }
-
-        private void ScoreText(int appleScore)
-        {
-            score += appleScore;
-            _scoreText.text ="Score: " + score.ToString();
-        }
-
-       
     }
 }
