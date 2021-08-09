@@ -28,37 +28,19 @@ namespace MVVM
 
         public event Action<bool> OnPauseGame;
 
-        public UIModelView(UIModel uiModel, ScoreData scoreData, SnakeModelView snakeModelView)
+        public UIModelView(UIModel uiModel, SnakeModelView snakeModelView)
         {
             _uiModel = uiModel;
             _menuBtn = _uiModel.MenuBtn;
             _resumeBtn = _uiModel.ResumeBtn;
             _mainMenuBtn = _uiModel.MainMenuBtn;
             _pauseMenu = _uiModel.PauseMenu;
-            _scoreData = scoreData;
             _scoreText = _uiModel.ScoreText;
             _bestScoreText = uiModel.BestScoreText;
             _snakeModelView = snakeModelView;
-            _snakeModelView.OnEatApple += SetCurrentScore;
             SetActivePanel();
         }
 
-        public void SetCurrentScore(int currentScore)
-        {
-            _scoreData.CurrentScore += currentScore;
-            _scoreText.text = _scoreData.CurrentScore.ToString();
-            _scoreData.AddToScoreList();
-            ScoreListToText();
-        }
-
-        public void ScoreListToText()
-        {
-            for (int i = 0; i < _scoreData.ScoreList.Count; i++)
-            {
-                _bestScoreText.text = i + 1 + " " + _scoreData.ScoreList[i].ToString();
-            }
-            
-        }
 
         public void IsPauseGame()
         {
