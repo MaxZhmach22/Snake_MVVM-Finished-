@@ -10,7 +10,6 @@ namespace MVVM
     public class SnakeModelView : ISnakeModelView
     {
         private bool _isDead;
-        private Transform _snakeTransform;
         private Vector2Int _snakePosition;
         private List<Vector2Int> _fullSnakeGridPosition;
         public event Action<int> OnEatApple;
@@ -19,15 +18,11 @@ namespace MVVM
         public ISnakeModel SnakeModel { get; }
         public bool IsDead { get => _isDead; set => _isDead = value; }
         public Vector2Int SnakeHeadPosition => _snakePosition;
-
         public List<Vector2Int> FullSnakeGridPosition => _fullSnakeGridPosition;
-
-       
 
         public SnakeModelView(ISnakeModel snakeModel)
         {
             SnakeModel = snakeModel;
-           
         }
 
         public void EatApple()
@@ -43,11 +38,6 @@ namespace MVVM
         public void GetSnakePosition(Vector2Int position)
         {
             _snakePosition = position;
-        }
-
-        public Transform GetSnakeTranform()
-        {
-            return _snakeTransform;
         }
 
         public void GetFullSnakeGridPosition(List<Vector2Int> snakePositionList)

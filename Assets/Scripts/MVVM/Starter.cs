@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace MVVM
@@ -14,28 +10,58 @@ namespace MVVM
         [SerializeField] private InputView _inputView;
         [SerializeField] private UIView _uIView;
 
+        private GameData _gameData;
         private SnakeModel _snakeModel;
         private SnakeModelView _snakeModelView;
         private UIModel _uiModel;
         private UIModelView _uiModelView;
-        private Score _score;
+        private AudioSource _audioSource;
 
         void Start()
         {
-            _score = new Score();
-            LevelSetup level = new LevelSetup(21, 21);
-            _snakeModel = new SnakeModel(1f);
+            _gameData = Resources.Load<GameData>("GameData");
+            _gameData.IsMuted = false;
+            ScoreJson _scoreJson = new ScoreJson();
+            _scoreJson.LoadFromJson();
+            LevelSetup level = new LevelSetup(21, 21, _gameData);
+            _snakeModel = new SnakeModel(1f, _gameData);
             _snakeModelView = new SnakeModelView(_snakeModel);
-            _uiModel = new UIModel();
-            _uiModelView = new UIModelView(_uiModel, _snakeModelView);
-            _uIView.Initialize(_uiModelView);
-            _snakeView.Initialize(_snakeModelView, level);
-            _inputView.Initialize(_snakeModelView, level);
-            _foodView.Initialize(_snakeModelView, level);
-            //_snakeModelView.OnEatApple += _score.IsTheBestScore;
+            _uiModel = new UIModel(_gameData);
+            _uiModelView = new UIModelView(_uiModel, _scoreJson);
+            _uIView.Initialize(_uiModelView, _gameData);
+            _snakeView.Initialize(_snakeModelView, level, _gameData);
+            _inputView.Initialize(_snakeModelView);
+            _foodView.Initialize(_snakeModelView, level, _gameData);
+            _snakeModelView.OnEatApple += _scoreJson.IsTheBestScore;
+            _snakeView.OnSelfEating += _uiModelView.LooseGame;
+            PlayBackgroundMusic();
+            _gameData.OnMutedSound += StopBackgoundMusic;
+
         }
 
-        
+        private void PlayBackgroundMusic()
+        {
+            _audioSource = gameObject.GetComponent<AudioSource>();
+            _audioSource.clip = _gameData.BackGroundMusic;
+            _audioSource.loop = true;
+            
+            if (!_gameData.IsMuted)
+            {
+                _audioSource.Play();
+                
+            }
+        }
+        private void StopBackgoundMusic(bool stop)
+        {
+            if (stop)
+            {
+                _audioSource.Stop();
+            }
+            else
+            {
+                _audioSource.Play();
+            }
+        }
     }
 
 }

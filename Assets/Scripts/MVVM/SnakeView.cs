@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MVVM
@@ -10,8 +7,6 @@ namespace MVVM
     
     public sealed class SnakeView : MonoBehaviour
     {
-        [SerializeField] private Sprite _snakeHead;
-        [SerializeField] private Sprite _snakeBody;
 
         private LevelSetup _levelSetup;
         private ISnakeModelView _snakeModelView;
@@ -21,20 +16,26 @@ namespace MVVM
         private Vector2Int gridPosition = new Vector2Int(10, 10);
         private Vector2Int _direction;
         private Direction gridMoveDirection = Direction.Right;
-        private int _snakeBodySize = 0; //Приходит из модели?
-        private List<Vector2Int> _snakeMovesList = new List<Vector2Int>(); //ПРиходит из модели?
+        private int _snakeBodySize = 0;
+        private List<Vector2Int> _snakeMovesList = new List<Vector2Int>();
         private List<SnakeBodyPart> snakeBodyPartList = new List<SnakeBodyPart>();
         private List<SnakeMovePosition> snakeMovePositonList = new List<SnakeMovePosition>();
+        public Action<bool> OnSelfEating;
+        private GameData _gameData;
+        private AudioSource _audioSource;
 
-        public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup)
+        public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup, GameData gameData)
         {
             _snakeModelView = snakeModelView;
             _levelSetup = levelSetup;
+            _gameData = gameData;
+            _audioSource = gameObject.GetComponent<AudioSource>();
             _snakeModelView.OnEatApple += OnEatApple;
             _snakeModelView.OnKeyInput += OnMove;
-            _snake = SnakeFactory.CreateGameObject(_snakeHead);
+            _snake = SnakeFactory.CreateGameObject(_gameData.SnakeHead);
             _snakeModelView.GetSnakePosition(gridPosition);
             _snakeModelView.GetFullSnakeGridPosition(_snakeMovesList);
+            _gameData.OnMutedSound += OnMutedSound;
 
         }
 
@@ -56,11 +57,7 @@ namespace MVVM
                 }
 
                 SnakeMovePosition snakeMovePosition = new SnakeMovePosition(previousSnakeMovePosition, gridPosition, gridMoveDirection);
-
                 snakeMovePositonList.Insert(0, snakeMovePosition);
-
-
-
                 gridPosition += _direction;
                 gridPosition = ValidateGridPosition(gridPosition);
 
@@ -76,8 +73,8 @@ namespace MVVM
                     Vector2Int snakeBodyPartGridPosition = snakeBodyPart.GetGridPosition();
                     if (gridPosition == snakeBodyPartGridPosition)
                     {
-                        Debug.Log("Dead");
-                        _snakeModelView.IsDead = true;
+                        _audioSource.PlayOneShot(_gameData.LoseSound);
+                        OnSelfEating?.Invoke(true);
                     }
                 }
 
@@ -89,10 +86,23 @@ namespace MVVM
             }
         }
 
+        public void OnMutedSound(bool muted)
+        {
+            if (muted)
+            {
+                _audioSource.volume = 0;
+            }
+            else
+            {
+                _audioSource.volume = 1;
+            }
+        }
+
         private void OnEatApple(int obj)
         {
             _snakeBodySize++;
             gridMoveTimerMax -= 0.005f;
+            _audioSource.PlayOneShot(_gameData.EatSound);
             CreateSnakeBodyPart();
         }
 
@@ -102,17 +112,13 @@ namespace MVVM
             gridMoveDirection = direction;
         }
 
-        private float GetAngleFromDirection(Vector2Int direction) // +
+        private float GetAngleFromDirection(Vector2Int direction) 
         {
             float n = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             if (n < 0) n += 360;
             return n;
         }
 
-        public Vector2Int GetSnakePosition()
-        {
-            return gridPosition;
-        }
         public Vector2Int ValidateGridPosition(Vector2Int gridPosition)
         {
             if (gridPosition.x < 0)
@@ -134,12 +140,12 @@ namespace MVVM
             return gridPosition;
         }
 
-        private void CreateSnakeBodyPart() //+
+        private void CreateSnakeBodyPart() 
         {
-            snakeBodyPartList.Add(new SnakeBodyPart(snakeBodyPartList.Count, _snakeBody));
+            snakeBodyPartList.Add(new SnakeBodyPart(snakeBodyPartList.Count, _gameData.SnakeBody));
         }
 
-        private void UpdateSnakeBodyPart() //+
+        private void UpdateSnakeBodyPart()
         {
             for (int i = 0; i < snakeBodyPartList.Count; i++)
             {

@@ -9,20 +9,20 @@ namespace MVVM
 {
     public sealed class LevelSetup
     {
-        private Vector2Int foodGridPosition;
+
         private int _weight;
         private int _height;
         private Sprite _backgroundImage;
+        
         public int Weight => _weight; 
         public int Height => _height; 
-        public LevelSetup(int weight, int height)
+        public LevelSetup(int weight, int height, GameData gameData)
         {
             _weight = weight;
             _height = height;
-            _backgroundImage = Resources.Load<Sprite>("Background");
+            _backgroundImage = gameData.BackgroundSprite;
             SetupBackgroundImage(_backgroundImage);
         }
-
 
         private void SetupBackgroundImage(Sprite backGroundSprite)
         {

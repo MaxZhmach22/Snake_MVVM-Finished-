@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace MVVM
@@ -13,15 +7,13 @@ namespace MVVM
     {
         
         private ISnakeModelView _snakeModelView;
-        private LevelSetup _levelSetup;
         private Direction gridMoveDirection = Direction.Right;
         private Vector2Int gridMoveDirectionVector = new Vector2Int(+1, 0);
         private Button _upBtn;
         private Button _downBtn;
         private Button _rightBtn;
         private Button _leftBtn;
-        private int score = 0;
-        
+
 
         private void Awake()
         {
@@ -29,12 +21,11 @@ namespace MVVM
         }
 
 
-        public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup)
+        public void Initialize(ISnakeModelView snakeModelView)
         {
             _snakeModelView = snakeModelView;
-            _levelSetup = levelSetup;
-
         }
+
         private void InputButtonsInit()
         {
             _upBtn = GameObject.Find("UpBtn").GetComponent<Button>();

@@ -15,11 +15,11 @@ namespace MVVM
         private Vector2Int _foodGridPosition;
         private Transform _appleTransform;
         
-        public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup)
+        public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup, GameData gameData)
         {
             _snakeModelView = snakeModelView;
             _levelSetup = levelSetup;
-            _appleTransform = SnakeFactory.CreateGameObject(_apple);
+            _appleTransform = SnakeFactory.CreateGameObject(gameData.AppleSprite);
             SpawnFood();
             _snakeModelView.OnEatApple += OnEatApple;
             
@@ -37,6 +37,7 @@ namespace MVVM
             do
             {
                 _foodGridPosition = new Vector2Int(UnityEngine.Random.Range(0, _levelSetup.Weight), UnityEngine.Random.Range(0, _levelSetup.Height));
+
             } while (_snakeModelView.FullSnakeGridPosition.IndexOf(_foodGridPosition) != -1);
 
             _appleTransform.position = new Vector3(_foodGridPosition.x, _foodGridPosition.y);

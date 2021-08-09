@@ -11,10 +11,10 @@ namespace MVVM
         private float _startSpeed;
         private Transform _transform;
 
-        public SnakeModel(float startSpeed)
+        public SnakeModel(float startSpeed, GameData gameData)
         {
             _startSpeed = startSpeed;
-            _snakeHead = Resources.Load<Sprite>("Snakehead");
+            _snakeHead = gameData.SnakeHead;
         }
 
         public float StartSpeed => _startSpeed;
