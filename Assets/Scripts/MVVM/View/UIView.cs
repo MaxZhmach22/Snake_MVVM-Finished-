@@ -17,11 +17,11 @@ namespace MVVM
 
         private List<Button> _buttons = new List<Button>();
         private AudioSource _audioSource;
-        private UIModelView _uIModelView;
+        private IUIIModelView _uIModelView;
         private GameData _gameData;
 
 
-        public void Initialize(UIModelView uIModelView, GameData gameData)
+        public void Initialize(IUIIModelView uIModelView, GameData gameData)
         {
             _uIModelView = uIModelView;
             _gameData = gameData;

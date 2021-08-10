@@ -1,29 +1,32 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace MVVM
 {
     public sealed class InputView : MonoBehaviour
     {
-        
         private ISnakeModelView _snakeModelView;
         private Direction gridMoveDirection = Direction.Right;
+        private List<Vector2Int> _currentAndPreviousDirectionVector = new List<Vector2Int>();
         private Vector2Int gridMoveDirectionVector = new Vector2Int(+1, 0);
+        private Vector2Int previousGridMoveDirectionVector = new Vector2Int(+1, 0);
         private Button _upBtn;
         private Button _downBtn;
         private Button _rightBtn;
         private Button _leftBtn;
 
-
         private void Awake()
         {
             InputButtonsInit();
+           
         }
-
 
         public void Initialize(ISnakeModelView snakeModelView)
         {
             _snakeModelView = snakeModelView;
+            _currentAndPreviousDirectionVector.Add(gridMoveDirectionVector);
+            _currentAndPreviousDirectionVector.Add(previousGridMoveDirectionVector);
         }
 
         private void InputButtonsInit()
@@ -49,6 +52,7 @@ namespace MVVM
             if (gridMoveDirection != Direction.Down)
             {
                 gridMoveDirection = direction;
+                
             }
         }
 
@@ -57,6 +61,7 @@ namespace MVVM
             if (gridMoveDirection != Direction.Up)
             {
                 gridMoveDirection = direction;
+                
             }
         }
 
@@ -65,6 +70,7 @@ namespace MVVM
             if (gridMoveDirection != Direction.Left)
             {
                 gridMoveDirection = direction;
+                
             }
         }
 
@@ -73,6 +79,7 @@ namespace MVVM
             if (gridMoveDirection != Direction.Right)
             {
                 gridMoveDirection = direction;
+                
             }
         }
 
@@ -80,14 +87,25 @@ namespace MVVM
         {
             switch (gridMoveDirection)
             {
-                default:
-                case Direction.Right: gridMoveDirectionVector = new Vector2Int(+1, 0); break;
-                case Direction.Left: gridMoveDirectionVector = new Vector2Int(-1, 0); break;
-                case Direction.Up: gridMoveDirectionVector = new Vector2Int(0, +1); break;
-                case Direction.Down: gridMoveDirectionVector = new Vector2Int(0, -1); break;
+                    default:
+                    case Direction.Right: gridMoveDirectionVector = new Vector2Int(+1, 0); break;
+                    case Direction.Left: gridMoveDirectionVector = new Vector2Int(-1, 0); break;
+                    case Direction.Up: gridMoveDirectionVector = new Vector2Int(0, +1); break;
+                    case Direction.Down: gridMoveDirectionVector = new Vector2Int(0, -1); break;
+                    
             }
-            
-            _snakeModelView.Move(gridMoveDirectionVector, gridMoveDirection);
+            if(previousGridMoveDirectionVector != gridMoveDirectionVector)
+            {
+                _currentAndPreviousDirectionVector.Add(gridMoveDirectionVector);
+                previousGridMoveDirectionVector = gridMoveDirectionVector;
+            }
+            if (_currentAndPreviousDirectionVector.Count >= 3)
+            {
+                _currentAndPreviousDirectionVector.Reverse();
+                _currentAndPreviousDirectionVector.RemoveAt(2);
+            }
+
+             _snakeModelView.Move(_currentAndPreviousDirectionVector, gridMoveDirection);
         }
     }
 }

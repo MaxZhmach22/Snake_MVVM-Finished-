@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace MVVM
@@ -8,16 +6,12 @@ namespace MVVM
     {
         private Sprite _snakeHead;
         private Sprite _snakeBody;
-        private float _startSpeed;
-        private Transform _transform;
 
         public SnakeModel(float startSpeed, GameData gameData)
         {
-            _startSpeed = startSpeed;
             _snakeHead = gameData.SnakeHead;
+            _snakeBody = gameData.SnakeBody;
         }
-
-        public float StartSpeed => _startSpeed;
 
         public Sprite SnakeHead => _snakeHead;
 

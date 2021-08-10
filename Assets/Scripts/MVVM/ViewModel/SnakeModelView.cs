@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MVVM
@@ -13,12 +10,14 @@ namespace MVVM
         private Vector2Int _snakePosition;
         private List<Vector2Int> _fullSnakeGridPosition;
         public event Action<int> OnEatApple;
-        public event Action<Vector2Int, Direction> OnKeyInput;
-
+        public event Action<List<Vector2Int>, Direction> OnKeyInput;
+        
         public ISnakeModel SnakeModel { get; }
         public bool IsDead { get => _isDead; set => _isDead = value; }
         public Vector2Int SnakeHeadPosition => _snakePosition;
         public List<Vector2Int> FullSnakeGridPosition => _fullSnakeGridPosition;
+
+        public bool OneMovePerTimer { get; set; }
 
         public SnakeModelView(ISnakeModel snakeModel)
         {
@@ -30,9 +29,9 @@ namespace MVVM
             OnEatApple?.Invoke(100);
         }
 
-        public void Move(Vector2Int position, Direction direction)
+        public void Move(List<Vector2Int> positions, Direction direction)
         {
-            OnKeyInput?.Invoke(position,direction);
+            OnKeyInput?.Invoke(positions, direction);
         }
 
         public void GetSnakePosition(Vector2Int position)

@@ -7,6 +7,5 @@ namespace MVVM
         public Sprite SnakeHead { get; }
         public Sprite SnakeBody { get; }
 
-        public float StartSpeed { get; }
     }
 }

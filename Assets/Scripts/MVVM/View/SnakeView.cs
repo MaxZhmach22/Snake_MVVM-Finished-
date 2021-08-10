@@ -8,21 +8,24 @@ namespace MVVM
     public sealed class SnakeView : MonoBehaviour
     {
 
-        private LevelSetup _levelSetup;
-        private ISnakeModelView _snakeModelView;
-        private Transform _snake;
         private float gridMoveTime;
-        private float gridMoveTimerMax = 0.5f;
-        private Vector2Int gridPosition = new Vector2Int(10, 10);
-        private Vector2Int _direction;
-        private Direction gridMoveDirection = Direction.Right;
+        private float gridMoveTimerMax = 0.4f;
         private int _snakeBodySize = 0;
+        private Vector2Int gridPosition = new Vector2Int(10, 10);
+        private Vector2Int _correctDirection = Vector2Int.right;
+        private Direction gridMoveDirection = Direction.Right;
+        private List<Vector2Int> _direction = new List<Vector2Int>();
         private List<Vector2Int> _snakeMovesList = new List<Vector2Int>();
         private List<SnakeBodyPart> snakeBodyPartList = new List<SnakeBodyPart>();
         private List<SnakeMovePosition> snakeMovePositonList = new List<SnakeMovePosition>();
         public Action<bool> OnSelfEating;
+
+        private Transform _snake;
         private GameData _gameData;
         private AudioSource _audioSource;
+        private LevelSetup _levelSetup;
+        private ISnakeModelView _snakeModelView;
+
 
         public void Initialize(ISnakeModelView snakeModelView, LevelSetup levelSetup, GameData gameData)
         {
@@ -33,6 +36,8 @@ namespace MVVM
             _snakeModelView.OnEatApple += OnEatApple;
             _snakeModelView.OnKeyInput += OnMove;
             _snake = SnakeFactory.CreateGameObject(_gameData.SnakeHead);
+            _snake.position = new Vector3(gridPosition.x, gridPosition.y);
+            _snake.eulerAngles = new Vector3(0, 0, GetAngleFromDirection(_correctDirection) - 90);
             _snakeModelView.GetSnakePosition(gridPosition);
             _snakeModelView.GetFullSnakeGridPosition(_snakeMovesList);
             _gameData.OnMutedSound += OnMutedSound;
@@ -58,7 +63,16 @@ namespace MVVM
 
                 SnakeMovePosition snakeMovePosition = new SnakeMovePosition(previousSnakeMovePosition, gridPosition, gridMoveDirection);
                 snakeMovePositonList.Insert(0, snakeMovePosition);
-                gridPosition += _direction;
+                if(!(_direction[0] == -_correctDirection))
+                {
+                    _correctDirection = _direction[0];
+                }
+                else
+                {
+                    _correctDirection = _direction[1];
+                }
+
+                gridPosition += _correctDirection;
                 gridPosition = ValidateGridPosition(gridPosition);
 
                 if(_snakeMovesList.Count >= _snakeBodySize + 1)
@@ -79,9 +93,10 @@ namespace MVVM
                 }
 
                 _snake.position = new Vector3(gridPosition.x, gridPosition.y);
-                _snake.eulerAngles = new Vector3(0, 0, GetAngleFromDirection(_direction) - 90);
+                _snake.eulerAngles = new Vector3(0, 0, GetAngleFromDirection(_correctDirection) - 90);
                 _snakeModelView.GetSnakePosition(gridPosition);
                 _snakeModelView.GetFullSnakeGridPosition(_snakeMovesList);
+                _snakeModelView.OneMovePerTimer = true;
 
             }
         }
@@ -98,17 +113,17 @@ namespace MVVM
             }
         }
 
-        private void OnEatApple(int obj)
+        private void OnEatApple(int score)
         {
             _snakeBodySize++;
-            gridMoveTimerMax -= 0.005f;
+            gridMoveTimerMax -= 0.01f;
             _audioSource.PlayOneShot(_gameData.EatSound);
             CreateSnakeBodyPart();
         }
 
-        private void OnMove(Vector2Int position, Direction direction)
+        private void OnMove(List<Vector2Int> positions, Direction direction)
         {
-            _direction = position;
+            _direction = positions;
             gridMoveDirection = direction;
         }
 

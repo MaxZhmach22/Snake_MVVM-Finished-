@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MVVM
 {
-    public class ScoreJson
+    public sealed class ScoreJson
     {
         private Score _score;
         public Action<int, int> OnScoreChanged;

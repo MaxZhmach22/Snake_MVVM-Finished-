@@ -12,6 +12,8 @@ namespace MVVM
         ISnakeModel SnakeModel { get; }
         bool IsDead { get; set; }
 
+        bool OneMovePerTimer { get; set; }
+
         Vector2Int SnakeHeadPosition { get; }
 
         List<Vector2Int> FullSnakeGridPosition { get; }
@@ -22,11 +24,11 @@ namespace MVVM
         void GetFullSnakeGridPosition(List<Vector2Int> snakePositionList);
 
 
-        void Move(Vector2Int position, Direction direction);
+        void Move(List<Vector2Int> position, Direction direction);
 
 
         event Action<int> OnEatApple;
-        event Action<Vector2Int, Direction> OnKeyInput;
+        event Action<List<Vector2Int>, Direction> OnKeyInput;
 
     }
 }

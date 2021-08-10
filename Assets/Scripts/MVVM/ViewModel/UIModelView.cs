@@ -5,7 +5,7 @@ using TMPro;
 
 namespace MVVM
 {
-    public sealed class UIModelView
+    public sealed class UIModelView : IUIIModelView
     {
         private Button _menuBtn;
         private Button _resumeBtn;
@@ -25,7 +25,7 @@ namespace MVVM
         private TextMeshProUGUI _loseScoreText;
         private TextMeshProUGUI _loseBestScoreText;
 
-        private UIModel _uiModel;
+        private IUIModel _uiModel;
         private ScoreJson _scoreJson;
         public Button MenuBtn { get => _menuBtn; }
         public Button ResumeBtn { get => _resumeBtn; }
@@ -41,7 +41,7 @@ namespace MVVM
 
         public event Action<bool> OnPauseGame;
 
-        public UIModelView(UIModel uiModel, ScoreJson scoreJson)
+        public UIModelView(IUIModel uiModel, ScoreJson scoreJson)
         {
             _uiModel = uiModel;
             _menuBtn = _uiModel.MenuBtn;

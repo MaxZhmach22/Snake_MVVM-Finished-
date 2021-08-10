@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 namespace MVVM
 { 
 
-    public sealed class UIModel
+    public sealed class UIModel : IUIModel
     {
         private TextMeshProUGUI _scoreText;
         private TextMeshProUGUI _bestScoreText;
