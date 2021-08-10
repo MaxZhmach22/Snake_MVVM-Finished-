@@ -22,7 +22,6 @@ namespace MVVM
             _gameData = Resources.Load<GameData>("GameData");
             _gameData.IsMuted = false;
             ScoreJson _scoreJson = new ScoreJson();
-            _scoreJson.LoadFromJson();
             LevelSetup level = new LevelSetup(21, 21, _gameData);
             _snakeModel = new SnakeModel(1f, _gameData);
             _snakeModelView = new SnakeModelView(_snakeModel);

@@ -3,26 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MVVM
 {
-
     public class ScoreJson
     {
         private Score _score;
         public Action<int, int> OnScoreChanged;
-
+        private string _filePath; 
         public Score Score { get => _score; set => _score = value; }
 
         public ScoreJson()
         {
             _score = new Score();
+            _filePath = GetPath();
         }
 
         private void SaveToJson()
         {
             string json = JsonUtility.ToJson(_score);
-            File.WriteAllText(Application.dataPath + "Best score.json", json);
+            File.WriteAllText(_filePath, json);
         }
 
         public void ResetBestScore()
@@ -34,22 +35,10 @@ namespace MVVM
 
         public void LoadFromJson()
         {
-            string path = Application.dataPath + "Best score.json";
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(Application.dataPath + "Best score.json");
-                if (json == "") 
-                {
-                    json = JsonUtility.ToJson(_score);
-                }
-                _score = JsonUtility.FromJson<Score>(json);
-                OnScoreChanged?.Invoke(_score.bestScore, _score._currentScore);
-            }
-            else
-            {
-                File.Create(path);
-                LoadFromJson();
-            }   
+
+            var jsonFile = Resources.Load<TextAsset>("Best Score");
+            _score = JsonUtility.FromJson<Score>(jsonFile.ToString());
+           
         }
 
         public void IsTheBestScore(int fromOneApple)
@@ -62,6 +51,26 @@ namespace MVVM
                 SaveToJson();
             }
             OnScoreChanged?.Invoke(_score.bestScore, _score._currentScore);
+        }
+        public string GetPath()
+        {
+            string folderPath = (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer ? Application.persistentDataPath : Application.dataPath) + "/myDataFolder/";
+            string filePath = folderPath + "Score.json";
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            if (!File.Exists(filePath))
+            {
+                File.Create(filePath).Close();
+                File.WriteAllText(filePath, JsonUtility.ToJson(_score));
+            }
+            else
+            {
+                string jsonText = File.ReadAllText(filePath);
+                _score = JsonUtility.FromJson<Score>(jsonText);
+            }
+            return filePath;
         }
 
     }
