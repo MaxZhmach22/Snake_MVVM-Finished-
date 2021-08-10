@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e58c7220dac7e664f8a4bc6faf1b8692, type: 3}
+  m_Name: GameData
+  m_EditorClassIdentifier: 
+  _backgroundSprite: {fileID: 21300000, guid: d823a7850cae65a4ca70a5887812d82b, type: 3}
+  _snakeHead: {fileID: 21300000, guid: 30c2e424800ed8147999534aacd530c2, type: 3}
+  _snakeBody: {fileID: 21300000, guid: ee48ee669c86e444c839f0a86e23c6ce, type: 3}
+  _appleSprite: {fileID: 21300000, guid: a051da4396ee865478929fb9f699d356, type: 3}
+  _mute: {fileID: 21300000, guid: d325513c93420d6468e0429eadc8def0, type: 3}
+  _unMute: {fileID: 21300000, guid: 42a444674ab421a4f9f1683ea25accfe, type: 3}
+  _eatSound: {fileID: 8300000, guid: 1239a366a7bf07941ac2d057b6d815fd, type: 3}
+  _loseSound: {fileID: 8300000, guid: e604a2e1e84ae904497afc168281cf58, type: 3}
+  _clickSound: {fileID: 8300000, guid: d0834d7d88ec9234ba80c9fb81311675, type: 3}
+  _backGroundMusic: {fileID: 8300000, guid: f6ad8369c7dd30b4e8dd3b25cf72856e, type: 3}
